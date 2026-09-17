@@ -27,6 +27,8 @@ The worksheets are vendor-neutral. The included n8n examples demonstrate the met
 - [Automation value estimator](automation-value-estimator.md) — estimate time value, avoidable rework, operating cost and payback without presenting the estimate as a guaranteed result.
 - [Copyable value template](automation-value-template.csv) — enter the same inputs in a simple CSV for your own calculation or spreadsheet.
 - [AI assistant pilot checklist](ai-assistant-pilot-checklist.md) — define approved sources, answer boundaries, human handoff, tests and launch checks for a customer or employee assistant.
+- [Rules, AI or human review decision sheet](ai-or-rules-decision-sheet.md) — decide which workflow steps need fixed rules, AI-assisted interpretation or an accountable person, then test missing data and failure paths.
+- [Free daily-task automation tracker](daily-task-automation-tracker.md) — measure expected runs, completed work, exceptions, review time and estimated minutes released with a copyable CSV for Excel or Google Sheets.
 - [Lead-enquiry handoff example](examples/lead-enquiry-handoff.md) — see a completed example with human review and failure handling.
 - [n8n lead-enquiry review workflow](n8n/lead-enquiry-review.md) — import a credential-free example that validates two synthetic enquiries and routes them for review.
 - [n8n verification record](n8n/verification.md) — see the exact local test boundary and successful branch results from n8n 2.39.6.
