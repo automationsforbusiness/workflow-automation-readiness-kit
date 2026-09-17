@@ -1,0 +1,155 @@
+{
+  "name": "Customer message handoff review - safe sample",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Safe sample\nUses fictional customer messages, no credentials, and no external actions. Treat this as a routing example only: keep a person responsible for sensitive, urgent, disputed, or explicitly requested human conversations.",
+        "height": 240,
+        "width": 440,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-620, -340],
+      "id": "4fe648d6-e7e4-41d4-b0b9-9356f5d03922",
+      "name": "About this sample"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-620, 0],
+      "id": "1bfceaca-169e-4818-8bb8-e2c1bffac42e",
+      "name": "Run sample"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      messageId: 'sample-routine-001',\n      channel: 'web_chat',\n      name: 'Lena Ortiz',\n      message: 'Can you explain which apps you can connect for a weekly report?',\n      customerRequestedHuman: false,\n      containsSensitiveData: false,\n      existingOpenCase: false\n    }\n  },\n  {\n    json: {\n      messageId: 'sample-human-002',\n      channel: 'whatsapp',\n      name: 'Marcus Reed',\n      message: 'I need a person. A charge looks wrong and this is urgent.',\n      customerRequestedHuman: true,\n      containsSensitiveData: false,\n      existingOpenCase: true\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-400, 0],
+      "id": "a3b214f8-c31a-4d61-a52a-bf850b3846b6",
+      "name": "Create fictional messages"
+    },
+    {
+      "parameters": {
+        "jsCode": "const humanTerms = ['human', 'person', 'someone', 'call me', 'agent'];\nconst reviewTerms = ['urgent', 'asap', 'complaint', 'charge', 'billing', 'refund', 'security', 'password', 'legal'];\n\nreturn $input.all().map((item) => {\n  const source = item.json;\n  const message = String(source.message || '').trim();\n  const lower = message.toLowerCase();\n  const reasons = [];\n  const matchedHumanTerms = humanTerms.filter((term) => lower.includes(term));\n  const matchedReviewTerms = reviewTerms.filter((term) => lower.includes(term));\n\n  if (Boolean(source.customerRequestedHuman) || matchedHumanTerms.length > 0) {\n    reasons.push('Customer requested a person');\n  }\n  if (Boolean(source.containsSensitiveData)) {\n    reasons.push('Message is marked as containing sensitive data');\n  }\n  if (Boolean(source.existingOpenCase)) {\n    reasons.push('An open case already exists');\n  }\n  if (matchedReviewTerms.length > 0) {\n    reasons.push(`Review topic detected: ${matchedReviewTerms.join(', ')}`);\n  }\n  if (!message) {\n    reasons.push('Message text is missing');\n  }\n\n  return {\n    json: {\n      messageId: String(source.messageId || ''),\n      channel: String(source.channel || '').trim(),\n      name: String(source.name || '').trim(),\n      message,\n      matchedHumanTerms,\n      matchedReviewTerms,\n      handoffReasons: reasons,\n      requiresHumanReview: reasons.length > 0\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-160, 0],
+      "id": "aecc6979-fb88-43ec-968c-89b81f233af4",
+      "name": "Evaluate handoff signals"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2f3d410a-fc5b-4c44-ac75-6311e5f9b729",
+              "leftValue": "={{ $json.requiresHumanReview }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [80, 0],
+      "id": "0c71d789-3ab3-41ba-bd1d-22935354c82f",
+      "name": "Needs a person?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b6f5ebd4-9195-4370-9c12-cf36836947d1",
+              "name": "reviewState",
+              "value": "human_review_required",
+              "type": "string"
+            },
+            {
+              "id": "b223c280-f846-49c7-9707-6dc179da8402",
+              "name": "nextStep",
+              "value": "Pause automated replies and place the full conversation in a named person's review queue.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [340, -100],
+      "id": "4fb23363-01bf-47db-b2fb-11baf8b340a2",
+      "name": "Prepare human review"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "68591176-3040-4a3c-aa4e-49342356d080",
+              "name": "reviewState",
+              "value": "safe_for_assistant_draft",
+              "type": "string"
+            },
+            {
+              "id": "a927b7c6-48a8-4ee0-8398-ff0f8f45b2ac",
+              "name": "nextStep",
+              "value": "Draft a direct answer from approved sources, then apply the normal confidence and handoff checks before sending.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [340, 100],
+      "id": "305afc6b-799a-402a-a66f-7812c81976c0",
+      "name": "Prepare assistant draft"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run sample": {
+      "main": [[{"node": "Create fictional messages", "type": "main", "index": 0}]]
+    },
+    "Create fictional messages": {
+      "main": [[{"node": "Evaluate handoff signals", "type": "main", "index": 0}]]
+    },
+    "Evaluate handoff signals": {
+      "main": [[{"node": "Needs a person?", "type": "main", "index": 0}]]
+    },
+    "Needs a person?": {
+      "main": [
+        [{"node": "Prepare human review", "type": "main", "index": 0}],
+        [{"node": "Prepare assistant draft", "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "383061b7-a1ca-4b32-82d8-341a4f822c45",
+  "meta": {},
+  "id": "AFBMessageHandoff01",
+  "tags": []
+}

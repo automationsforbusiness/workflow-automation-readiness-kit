@@ -1,0 +1,214 @@
+{
+  "name": "Lead enquiry review - safe sample",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Safe sample\nUses fictional enquiries, no credentials, and no external actions. Replace the sample source only after mapping fields and keep a person responsible for customer-facing approval.",
+        "height": 240,
+        "width": 420,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -620,
+        -340
+      ],
+      "id": "a4dd296d-af14-4424-83c1-2f70c2add0c1",
+      "name": "About this sample"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -620,
+        0
+      ],
+      "id": "a9326183-2fbb-4bb8-87dc-0ca74c3d34fd",
+      "name": "Run sample"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      enquiryId: 'sample-complete-001',\n      name: 'Amina Rahman',\n      email: 'AMINA@EXAMPLE.COM ',\n      task: 'Prepare a summary of website enquiries for review before follow-up',\n      currentSystem: 'Website form and spreadsheet',\n      frequency: 'Daily',\n      owner: 'Sales coordinator',\n      customerFacingAction: true\n    }\n  },\n  {\n    json: {\n      enquiryId: 'sample-needs-details-002',\n      name: 'Jon Bell',\n      email: 'jon.example.com',\n      task: '',\n      currentSystem: 'Not yet specified',\n      frequency: 'Weekly',\n      owner: '',\n      customerFacingAction: false\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "f72e6c0b-ad1c-4d0c-b416-1f83f3519a24",
+      "name": "Create safe sample enquiries"
+    },
+    {
+      "parameters": {
+        "jsCode": "const emailPattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n\nfunction fingerprint(value) {\n  let hash = 2166136261;\n  for (let i = 0; i < value.length; i += 1) {\n    hash ^= value.charCodeAt(i);\n    hash = Math.imul(hash, 16777619);\n  }\n  return `sample-${(hash >>> 0).toString(16).padStart(8, '0')}`;\n}\n\nreturn $input.all().map((item) => {\n  const source = item.json;\n  const normalizedEmail = String(source.email || '').trim().toLowerCase();\n  const task = String(source.task || '').trim();\n  const owner = String(source.owner || '').trim();\n  const missingFields = [];\n\n  if (!String(source.name || '').trim()) missingFields.push('name');\n  if (!emailPattern.test(normalizedEmail)) missingFields.push('valid email');\n  if (!task) missingFields.push('task');\n  if (!owner) missingFields.push('owner');\n\n  const requiresHumanReview = missingFields.length > 0;\n  const reviewReason = requiresHumanReview\n    ? `Clarify: ${missingFields.join(', ')}`\n    : source.customerFacingAction\n      ? 'Inputs are complete; keep human approval before any customer-facing follow-up.'\n      : 'Inputs are complete; review the pilot output before enabling downstream actions.';\n\n  return {\n    json: {\n      enquiryId: source.enquiryId,\n      name: String(source.name || '').trim(),\n      normalizedEmail,\n      task,\n      currentSystem: String(source.currentSystem || '').trim(),\n      frequency: String(source.frequency || '').trim(),\n      owner,\n      customerFacingAction: Boolean(source.customerFacingAction),\n      missingFields,\n      requiresHumanReview,\n      reviewReason,\n      fingerprint: fingerprint(`${normalizedEmail}|${task.toLowerCase()}`)\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "50c5af02-98f0-4c7f-966f-b85d38c25db3",
+      "name": "Validate and normalize"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "5469e816-ec9d-4b82-98c4-1ac6ccb14877",
+              "leftValue": "={{ $json.requiresHumanReview }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        0
+      ],
+      "id": "e4cc24b2-1ffb-45cd-a15c-a20b417010ff",
+      "name": "Needs clarification?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "89c792f7-0908-4b00-af22-4324376160d2",
+              "name": "reviewState",
+              "value": "needs_clarification",
+              "type": "string"
+            },
+            {
+              "id": "74dadb30-6ee2-4f7f-9191-660926838f72",
+              "name": "nextStep",
+              "value": "Ask only for the missing information, then review again.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        -100
+      ],
+      "id": "9592d291-2261-4b83-9217-b0c8ad4993b8",
+      "name": "Prepare clarification queue"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c61fc36a-0577-4166-8579-ab9b72ff1512",
+              "name": "reviewState",
+              "value": "ready_for_human_approved_pilot",
+              "type": "string"
+            },
+            {
+              "id": "6a5b6e17-2a50-425a-89b2-4e8b8ec99cc4",
+              "name": "nextStep",
+              "value": "Run the proposed step on sample data and have the named owner approve the result.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        340,
+        100
+      ],
+      "id": "b8449a60-3e79-428a-ab43-5160cdb84228",
+      "name": "Prepare pilot review"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run sample": {
+      "main": [
+        [
+          {
+            "node": "Create safe sample enquiries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create safe sample enquiries": {
+      "main": [
+        [
+          {
+            "node": "Validate and normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate and normalize": {
+      "main": [
+        [
+          {
+            "node": "Needs clarification?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs clarification?": {
+      "main": [
+        [
+          {
+            "node": "Prepare clarification queue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare pilot review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ac83384c-15f4-4b93-8a68-c9f3e319844d",
+  "meta": {},
+  "id": "AFBLeadReview01",
+  "tags": []
+}

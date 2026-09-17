@@ -1,0 +1,155 @@
+{
+  "name": "Weekly operating report review - safe sample",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Safe sample\nUses fictional weekly records, no credentials, and no external actions. Replace the source only after confirming the metric definitions and keep the named owner responsible for final approval.",
+        "height": 240,
+        "width": 420,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-620, -340],
+      "id": "07147e88-5a70-4c5f-a915-784d4df060d4",
+      "name": "About this sample"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-620, 0],
+      "id": "c7b61848-3b06-4530-8531-e3a567168abc",
+      "name": "Run sample"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      reportId: 'sample-stable-week',\n      period: 'Fictional week A',\n      websiteVisits: 320,\n      automationRequests: 18,\n      completedRequests: 16,\n      overdueItems: 0,\n      criticalExceptions: 0,\n      owner: 'Operations lead',\n      note: 'Synthetic data for workflow testing only'\n    }\n  },\n  {\n    json: {\n      reportId: 'sample-review-week',\n      period: 'Fictional week B',\n      websiteVisits: 280,\n      automationRequests: 22,\n      completedRequests: 12,\n      overdueItems: 2,\n      criticalExceptions: 1,\n      owner: '',\n      note: 'Synthetic data for workflow testing only'\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-400, 0],
+      "id": "b2cc4f30-0cf0-43c8-b9c0-e014d5db90f7",
+      "name": "Create fictional weekly data"
+    },
+    {
+      "parameters": {
+        "jsCode": "return $input.all().map((item) => {\n  const source = item.json;\n  const visits = Math.max(0, Number(source.websiteVisits) || 0);\n  const requests = Math.max(0, Number(source.automationRequests) || 0);\n  const completed = Math.max(0, Number(source.completedRequests) || 0);\n  const overdue = Math.max(0, Number(source.overdueItems) || 0);\n  const critical = Math.max(0, Number(source.criticalExceptions) || 0);\n  const owner = String(source.owner || '').trim();\n  const reviewReasons = [];\n\n  if (!owner) reviewReasons.push('Assign a report owner');\n  if (critical > 0) reviewReasons.push(`Review ${critical} critical exception${critical === 1 ? '' : 's'}`);\n  if (overdue > 0) reviewReasons.push(`Review ${overdue} overdue item${overdue === 1 ? '' : 's'}`);\n  if (completed > requests) reviewReasons.push('Completed requests exceed received requests');\n\n  const requestRatePercent = visits > 0 ? Number(((requests / visits) * 100).toFixed(1)) : null;\n  const completionRatePercent = requests > 0 ? Number(((completed / requests) * 100).toFixed(1)) : null;\n  const requiresHumanReview = reviewReasons.length > 0;\n\n  return {\n    json: {\n      reportId: String(source.reportId || ''),\n      period: String(source.period || ''),\n      websiteVisits: visits,\n      automationRequests: requests,\n      completedRequests: completed,\n      requestRatePercent,\n      completionRatePercent,\n      overdueItems: overdue,\n      criticalExceptions: critical,\n      owner,\n      reviewReasons,\n      requiresHumanReview,\n      note: String(source.note || '')\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-160, 0],
+      "id": "ae39fbe3-45f1-4cb7-9db9-2e228104129d",
+      "name": "Calculate and validate report"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e74612a6-152a-4177-af2a-679567805d2d",
+              "leftValue": "={{ $json.requiresHumanReview }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [80, 0],
+      "id": "78316202-0d4e-4af0-b238-d299751c3687",
+      "name": "Needs exception review?"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9857a190-730b-4e5b-9b91-5a7a804611f5",
+              "name": "reviewState",
+              "value": "needs_exception_review",
+              "type": "string"
+            },
+            {
+              "id": "14a00554-23f9-46ad-a2e4-4308304312e2",
+              "name": "nextStep",
+              "value": "Resolve the listed exceptions and have the named owner approve the corrected report.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [340, -100],
+      "id": "96fd149e-48b7-4486-8f35-a188f6397e58",
+      "name": "Prepare exception queue"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b93c564-a664-4d42-8ace-44d65cce96c8",
+              "name": "reviewState",
+              "value": "ready_for_owner_approval",
+              "type": "string"
+            },
+            {
+              "id": "4e085734-c8be-4ba0-b465-187a2b4188de",
+              "name": "nextStep",
+              "value": "Have the named owner compare the summary with the source system before sharing it.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [340, 100],
+      "id": "8ec48a93-5f71-4ece-b59a-5e731fa6f85e",
+      "name": "Prepare approval queue"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Run sample": {
+      "main": [[{"node": "Create fictional weekly data", "type": "main", "index": 0}]]
+    },
+    "Create fictional weekly data": {
+      "main": [[{"node": "Calculate and validate report", "type": "main", "index": 0}]]
+    },
+    "Calculate and validate report": {
+      "main": [[{"node": "Needs exception review?", "type": "main", "index": 0}]]
+    },
+    "Needs exception review?": {
+      "main": [
+        [{"node": "Prepare exception queue", "type": "main", "index": 0}],
+        [{"node": "Prepare approval queue", "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {"executionOrder": "v1"},
+  "versionId": "af1c8c41-66b0-4884-92f8-dad1dc0aa427",
+  "meta": {},
+  "id": "AFBWeeklyReport01",
+  "tags": []
+}
