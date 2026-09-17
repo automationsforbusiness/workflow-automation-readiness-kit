@@ -32,6 +32,8 @@ n8n execute --id=AFBMessageHandoff01 --rawOutput
 - `sample-human-002` ends in `human_review_required`. It detects an explicit human request, an open case, and the review terms `urgent` and `charge`.
 - The workflow never sends either message.
 
+The workflow also contains a full in-canvas overview covering the intended user, behavior, setup, requirements, customization boundary and human-handoff rule. This matches the current Creator Hub requirement for the complete template description inside a sticky note.
+
 The exact isolated CLI check is recorded in [`customer-message-handoff-verification.md`](customer-message-handoff-verification.md).
 
 ## Adapting it safely

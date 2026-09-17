@@ -15,6 +15,8 @@ This small workflow shows how to validate an enquiry before anyone builds a cust
 
 The workflow never treats validation as permission to contact a customer. The final output is a review record, not a sent email or updated CRM entry.
 
+The workflow also contains a full in-canvas overview covering the intended user, behavior, setup, requirements, customization boundary and human-approval rule. This follows the current n8n Creator Hub requirement that a submitted template include its complete description in a sticky note.
+
 ## Import and run
 
 Use the n8n editor's **Import from File** option and select [`lead-enquiry-review.workflow.json`](lead-enquiry-review.workflow.json). Then open the workflow and choose **Execute workflow**.

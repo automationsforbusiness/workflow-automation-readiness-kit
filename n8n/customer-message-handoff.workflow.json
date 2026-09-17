@@ -3,14 +3,17 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Safe sample\nUses fictional customer messages, no credentials, and no external actions. Treat this as a routing example only: keep a person responsible for sensitive, urgent, disputed, or explicitly requested human conversations.",
-        "height": 240,
-        "width": 440,
+        "content": "# Route customer messages to an assistant draft or human review\n\n## Who this is for\nSmall-business owners, support teams, consultants, and n8n beginners designing an assistant that must stop when a person, sensitive topic, or existing case requires human attention.\n\n## What it does\nThe workflow creates two fictional customer messages and checks explicit human requests, review-topic terms, sensitive-data flags, open cases, and missing text. It routes the urgent example to `human_review_required` and the routine example to `safe_for_assistant_draft`. It never calls an AI model, sends a reply, or changes an inbox.\n\n## How to set it up\nRun the sample as provided. Confirm that `sample-routine-001` reaches the assistant-draft state. Confirm that `sample-human-002` detects the human request, open case, and the terms `urgent` and `charge`, then reaches human review. No credentials are required.\n\n## Requirements\nn8n with the built-in Manual Trigger, Code, If, and Edit Fields nodes. All people, messages, channels, and states are fictional.\n\n## How to customize\nReplace only the fictional source after mapping a real channel with non-sensitive samples. Adapt the terms and flags to the business's policies, languages, and observed failure cases. Keep a named owner and pause period. A draft state is not permission to send.",
+        "height": 560,
+        "width": 620,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-620, -340],
+      "position": [
+        -720,
+        -620
+      ],
       "id": "4fe648d6-e7e4-41d4-b0b9-9356f5d03922",
       "name": "About this sample"
     },
@@ -18,7 +21,10 @@
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [-620, 0],
+      "position": [
+        -620,
+        0
+      ],
       "id": "1bfceaca-169e-4818-8bb8-e2c1bffac42e",
       "name": "Run sample"
     },
@@ -28,7 +34,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-400, 0],
+      "position": [
+        -400,
+        0
+      ],
       "id": "a3b214f8-c31a-4d61-a52a-bf850b3846b6",
       "name": "Create fictional messages"
     },
@@ -38,7 +47,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-160, 0],
+      "position": [
+        -160,
+        0
+      ],
       "id": "aecc6979-fb88-43ec-968c-89b81f233af4",
       "name": "Evaluate handoff signals"
     },
@@ -69,7 +81,10 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [80, 0],
+      "position": [
+        80,
+        0
+      ],
       "id": "0c71d789-3ab3-41ba-bd1d-22935354c82f",
       "name": "Needs a person?"
     },
@@ -96,7 +111,10 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [340, -100],
+      "position": [
+        340,
+        -100
+      ],
       "id": "4fb23363-01bf-47db-b2fb-11baf8b340a2",
       "name": "Prepare human review"
     },
@@ -123,7 +141,10 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [340, 100],
+      "position": [
+        340,
+        100
+      ],
       "id": "305afc6b-799a-402a-a66f-7812c81976c0",
       "name": "Prepare assistant draft"
     }
@@ -131,23 +152,61 @@
   "pinData": {},
   "connections": {
     "Run sample": {
-      "main": [[{"node": "Create fictional messages", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Create fictional messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Create fictional messages": {
-      "main": [[{"node": "Evaluate handoff signals", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Evaluate handoff signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Evaluate handoff signals": {
-      "main": [[{"node": "Needs a person?", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Needs a person?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Needs a person?": {
       "main": [
-        [{"node": "Prepare human review", "type": "main", "index": 0}],
-        [{"node": "Prepare assistant draft", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Prepare human review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare assistant draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
   "active": false,
-  "settings": {"executionOrder": "v1"},
+  "settings": {
+    "executionOrder": "v1"
+  },
   "versionId": "383061b7-a1ca-4b32-82d8-341a4f822c45",
   "meta": {},
   "id": "AFBMessageHandoff01",

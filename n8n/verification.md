@@ -1,6 +1,6 @@
 # Verification record
 
-The workflow in this folder was imported and executed locally with n8n `2.39.6` on 16 September 2026. It was imported into a fresh isolated data folder and executed again after the in-canvas safety note was added.
+The workflow in this folder was imported and executed locally with n8n `2.39.6` on 16 September 2026. On 17 September it was imported into another fresh isolated data folder and executed again after the in-canvas note was expanded to the complete Creator Hub description.
 
 ## Test boundary
 
@@ -11,11 +11,11 @@ The workflow in this folder was imported and executed locally with n8n `2.39.6` 
 - No credentials
 - No external API calls
 - No email, CRM, database, or customer-system changes
-- One non-executing sticky note explaining the sample boundary
+- One non-executing 181-word sticky note covering audience, behavior, setup, requirements, customization and the human-approval boundary
 
 ## Result
 
-The n8n CLI completed the workflow with `status: success` and `finished: true`.
+The 17 September n8n CLI run completed the updated workflow with `status: success` and `finished: true`.
 
 | Sample | Validation result | Final review state |
 | --- | --- | --- |

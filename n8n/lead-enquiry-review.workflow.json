@@ -3,16 +3,16 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Safe sample\nUses fictional enquiries, no credentials, and no external actions. Replace the sample source only after mapping fields and keep a person responsible for customer-facing approval.",
-        "height": 240,
-        "width": 420,
+        "content": "# Validate and route lead enquiries for human review\n\n## Who this is for\nSmall-business owners, operations teams, consultants, and n8n beginners who want to validate enquiry data before connecting a form, CRM, spreadsheet, or help desk.\n\n## What it does\nThe workflow creates two fictional enquiries, normalizes the email and text fields, identifies missing information, and routes each record to either a clarification queue or a human-approved pilot state. It never contacts a customer or changes an external system.\n\n## How to set it up\nRun the sample as provided first. Confirm that `sample-complete-001` reaches `ready_for_human_approved_pilot` and `sample-needs-details-002` reaches `needs_clarification`. No credentials or accounts are required.\n\n## Requirements\nn8n with the built-in Manual Trigger, Code, If, and Edit Fields nodes. All included people and records are fictional.\n\n## How to customize\nReplace only the `Create safe sample enquiries` node after mapping your incoming field names. Keep validation and a named human owner. Add CRM updates or messages only after testing non-sensitive samples and documenting a pause or rollback path. A valid record is not permission to contact someone; retain human approval before any customer-facing action.",
+        "height": 560,
+        "width": 620,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -620,
-        -340
+        -720,
+        -620
       ],
       "id": "a4dd296d-af14-4424-83c1-2f70c2add0c1",
       "name": "About this sample"

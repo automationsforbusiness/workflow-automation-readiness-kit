@@ -3,14 +3,17 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Safe sample\nUses fictional weekly records, no credentials, and no external actions. Replace the source only after confirming the metric definitions and keep the named owner responsible for final approval.",
-        "height": 240,
-        "width": 420,
+        "content": "# Calculate and review weekly operating metrics before sharing\n\n## Who this is for\nOperations teams, small-business owners, consultants, and n8n beginners who need a credential-free example of calculating weekly metrics while preserving exception review and final ownership.\n\n## What it does\nThe workflow creates two fictional weekly records, normalizes the numbers, calculates request and completion rates, and makes missing ownership, overdue work, and critical exceptions visible. It routes a stable report to owner approval and an exception-bearing report to a review queue. It never publishes or sends a report.\n\n## How to set it up\nRun the sample as provided. Confirm that the stable record reaches `ready_for_owner_approval` with 5.6% request rate and 88.9% completion rate. Confirm that the second reaches `needs_exception_review` with 7.9% and 54.5% plus three clear reasons. No credentials are required.\n\n## Requirements\nn8n with the built-in Manual Trigger, Code, If, and Edit Fields nodes. All records and percentages are synthetic.\n\n## How to customize\nReplace only the fictional source after defining the reporting period, timezone, authoritative data source, late-data rule, owner, and stop conditions. Keep delivery disabled until a person compares the output with the source and approves it.",
+        "height": 560,
+        "width": 620,
         "color": 6
       },
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-620, -340],
+      "position": [
+        -720,
+        -620
+      ],
       "id": "07147e88-5a70-4c5f-a915-784d4df060d4",
       "name": "About this sample"
     },
@@ -18,7 +21,10 @@
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [-620, 0],
+      "position": [
+        -620,
+        0
+      ],
       "id": "c7b61848-3b06-4530-8531-e3a567168abc",
       "name": "Run sample"
     },
@@ -28,7 +34,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-400, 0],
+      "position": [
+        -400,
+        0
+      ],
       "id": "b2cc4f30-0cf0-43c8-b9c0-e014d5db90f7",
       "name": "Create fictional weekly data"
     },
@@ -38,7 +47,10 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-160, 0],
+      "position": [
+        -160,
+        0
+      ],
       "id": "ae39fbe3-45f1-4cb7-9db9-2e228104129d",
       "name": "Calculate and validate report"
     },
@@ -69,7 +81,10 @@
       },
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [80, 0],
+      "position": [
+        80,
+        0
+      ],
       "id": "78316202-0d4e-4af0-b238-d299751c3687",
       "name": "Needs exception review?"
     },
@@ -96,7 +111,10 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [340, -100],
+      "position": [
+        340,
+        -100
+      ],
       "id": "96fd149e-48b7-4486-8f35-a188f6397e58",
       "name": "Prepare exception queue"
     },
@@ -123,7 +141,10 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [340, 100],
+      "position": [
+        340,
+        100
+      ],
       "id": "8ec48a93-5f71-4ece-b59a-5e731fa6f85e",
       "name": "Prepare approval queue"
     }
@@ -131,23 +152,61 @@
   "pinData": {},
   "connections": {
     "Run sample": {
-      "main": [[{"node": "Create fictional weekly data", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Create fictional weekly data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Create fictional weekly data": {
-      "main": [[{"node": "Calculate and validate report", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Calculate and validate report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Calculate and validate report": {
-      "main": [[{"node": "Needs exception review?", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Needs exception review?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Needs exception review?": {
       "main": [
-        [{"node": "Prepare exception queue", "type": "main", "index": 0}],
-        [{"node": "Prepare approval queue", "type": "main", "index": 0}]
+        [
+          {
+            "node": "Prepare exception queue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare approval queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
   "active": false,
-  "settings": {"executionOrder": "v1"},
+  "settings": {
+    "executionOrder": "v1"
+  },
   "versionId": "af1c8c41-66b0-4884-92f8-dad1dc0aa427",
   "meta": {},
   "id": "AFBWeeklyReport01",

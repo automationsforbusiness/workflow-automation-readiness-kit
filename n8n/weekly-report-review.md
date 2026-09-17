@@ -16,6 +16,8 @@ This credential-free n8n example turns two fictional weekly summaries into a sma
 
 It does not connect to analytics, a CRM, email, a spreadsheet, or a customer system. Replace the fictional source only after defining who owns the report, which source is authoritative, and what should stop automatic sharing.
 
+The workflow also contains a full in-canvas overview covering the intended user, behavior, setup, requirements, customization boundary and owner-approval rule. This matches the current Creator Hub requirement for the complete template description inside a sticky note.
+
 ## Import and run
 
 Import [`weekly-report-review.workflow.json`](weekly-report-review.workflow.json) into n8n, open the workflow, and choose **Execute workflow**. No credentials are required.
