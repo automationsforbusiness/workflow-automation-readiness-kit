@@ -21,6 +21,7 @@ The worksheets are vendor-neutral. The included n8n examples demonstrate the met
 
 - [Workflow brief](workflow-brief.md) — map the trigger, steps, systems, exceptions and desired result.
 - [Readiness checklist](readiness-checklist.md) — score whether the process is stable enough for a pilot.
+- [Four launch gates](launch-gates-checklist.md) — run a final go/no-go check for required input, duplicate protection, visible failures and human approval.
 - [Automation tool selection matrix](automation-tool-selection-matrix.md) — compare built-in automation, no-code platforms, workflow engines, RPA, custom code and AI-assisted workflows against the same operational requirements.
 - [Automation value estimator](automation-value-estimator.md) — estimate time value, avoidable rework, operating cost and payback without presenting the estimate as a guaranteed result.
 - [Copyable value template](automation-value-template.csv) — enter the same inputs in a simple CSV for your own calculation or spreadsheet.
