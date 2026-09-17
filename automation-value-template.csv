@@ -1,0 +1,23 @@
+input,value,notes
+runs_per_month,,Observed monthly frequency
+current_minutes_per_run,,Include handling and review time
+expected_minutes_after_automation,,Include remaining approval and exceptions
+people_affected,,People doing the repeated work
+cost_per_working_hour,,Use one consistent currency
+rework_events_per_month,,Observed errors or rework events
+value_per_rework_event,,Cost or staff-time value per event
+preventable_percentage,,Enter as a decimal such as 0.50
+monthly_platform_cost,,Recurring automation-platform cost
+monthly_ai_or_api_cost,,Estimated recurring usage cost
+monthly_monitoring_and_maintenance,,Ongoing review and maintenance
+monthly_human_review_cost,,Remaining human approval or review cost
+other_monthly_cost,,Other recurring cost
+one_time_setup_cost,,Discovery build test and handover
+minutes_saved_per_run,,current_minutes_per_run minus expected_minutes_after_automation
+monthly_hours_saved,,runs_per_month times minutes_saved_per_run times people_affected divided by 60
+monthly_time_value,,monthly_hours_saved times cost_per_working_hour
+monthly_rework_value,,rework_events_per_month times value_per_rework_event times preventable_percentage
+total_monthly_operating_cost,,Sum all recurring costs
+monthly_gross_value,,monthly_time_value plus monthly_rework_value
+monthly_net_value,,monthly_gross_value minus total_monthly_operating_cost
+estimated_payback_months,,one_time_setup_cost divided by monthly_net_value only when positive
