@@ -20,6 +20,7 @@ The worksheets are vendor-neutral. The included n8n examples demonstrate the met
 ## What is included
 
 - [Workflow brief](workflow-brief.md) — map the trigger, steps, systems, exceptions and desired result.
+- [First-automation scorecard](first-automation-scorecard.md) — compare several repeated tasks and choose a narrow, low-risk first pilot.
 - [Readiness checklist](readiness-checklist.md) — score whether the process is stable enough for a pilot.
 - [Four launch gates](launch-gates-checklist.md) — run a final go/no-go check for required input, duplicate protection, visible failures and human approval.
 - [Automation tool selection matrix](automation-tool-selection-matrix.md) — compare built-in automation, no-code platforms, workflow engines, RPA, custom code and AI-assisted workflows against the same operational requirements.
